@@ -1,0 +1,39 @@
+modules = ["python-3.11", "python3"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["fontconfig", "freetype", "ghostscript", "glib", "glibcLocales", "harfbuzz", "jq", "pango", "postgresql"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Financial Advisor Platform"
+
+[[workflows.workflow]]
+name = "Financial Advisor Platform"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "./run_backend.sh"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "./run_backend.sh"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

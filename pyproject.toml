@@ -1,0 +1,16 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "flask-cors==3.0.10",
+    "flask==2.2.3",
+    "numpy==1.24.2",
+    "werkzeug==2.2.3",
+    "pandas==1.5.3",
+    "openpyxl==3.1.2",
+    "reportlab>=4.4.0",
+    "weasyprint>=65.1",
+    "sqlalchemy>=2.0.40",
+]

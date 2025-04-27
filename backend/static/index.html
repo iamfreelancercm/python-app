@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Advisor Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 2rem;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #2A5298;
+            color: white;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #2A5298;
+            border-color: #2A5298;
+        }
+        .btn-primary:hover {
+            background-color: #1e3c70;
+            border-color: #1e3c70;
+        }
+        .dashboard-header {
+            background-color: #2A5298;
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+        }
+        #status-message {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+        .table-responsive {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container {
+            background-color: white;
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 300px;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Financial Goals Styles */
+        .goal-card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .goal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .goal-header {
+            padding: 15px;
+            color: white;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .goal-category-Retirement {
+            background: linear-gradient(135deg, #4A6FFF 0%, #2A5298 100%);
+        }
+        
+        .goal-category-Education {
+            background: linear-gradient(135deg, #6D42C7 0%, #40247B 100%);
+        }
+        
+        .goal-category-Home {
+            background: linear-gradient(135deg, #FF8C42 0%, #D96527 100%);
+        }
+        
+        .goal-category-Emergency {
+            background: linear-gradient(135deg, #1ABC9C 0%, #0D8E78 100%);
+        }
+        
+        .goal-category-Vacation {
+            background: linear-gradient(135deg, #FF5E7A 0%, #D93654 100%);
+        }
+        
+        .goal-category-Car {
+            background: linear-gradient(135deg, #3498DB 0%, #2174AE 100%);
+        }
+        
+        .goal-category-General {
+            background: linear-gradient(135deg, #7F8C8D 0%, #5C6768 100%);
+        }
+        
+        .goal-body {
+            padding: 15px;
+            background-color: white;
+        }
+        
+        .goal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .goal-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .goal-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .goal-amount {
+            font-weight: 600;
+        }
+        
+        .goal-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .goal-priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .goal-priority-1 {
+            background-color: #E74C3C;
+        }
+        
+        .goal-priority-2 {
+            background-color: #FF8C42;
+        }
+        
+        .goal-priority-3 {
+            background-color: #3498DB;
+        }
+        
+        .goal-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .goal-status-Completed {
+            background-color: #2ECC71;
+            color: white;
+        }
+        
+        .goal-status-In-Progress {
+            background-color: #3498DB;
+            color: white;
+        }
+        
+        .goal-status-Canceled {
+            background-color: #95A5A6;
+            color: white;
+        }
+        
+        .goal-progress-container {
+            width: 100%;
+            height: 12px;
+            background-color: #F0F0F0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .goal-progress-bar {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 1s ease-in-out;
+            background-image: linear-gradient(45deg, 
+                rgba(255,255,255,.15) 25%, transparent 25%, 
+                transparent 50%, rgba(255,255,255,.15) 50%, 
+                rgba(255,255,255,.15) 75%, transparent 75%, 
+                transparent);
+            background-size: 20px 20px;
+            animation: progress-bar-stripes 1s linear infinite;
+        }
+        
+        @keyframes progress-bar-stripes {
+            from {
+                background-position: 20px 0;
+            }
+            to {
+                background-position: 0 0;
+            }
+        }
+        
+        .goal-actions {
+            margin-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .goal-actions button {
+            margin-left: 5px;
+        }
+        
+        /* Goal Progress Update Modal */
+        .progress-update-form {
+            margin-top: 20px;
+        }
+        
+        .progress-update-history {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .progress-update-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .progress-update-amount {
+            font-weight: 600;
+            color: #2ECC71;
+        }
+        
+        .progress-update-date {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center dashboard-header">
+                <h1>Financial Advisor Platform</h1>
+                <p class="lead mb-0">Household and Account Management</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div id="status-message" class="d-none"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Data Actions
+                    </div>
+                    <div class="card-body">
+                        <button id="create-sample-data" class="btn btn-primary mb-3">Create Sample Data</button>
+                        <form id="upload-form" class="mb-3">
+                            <div class="mb-3">
+                                <label for="excel-file" class="form-label">Upload Excel File</label>
+                                <input type="file" class="form-control" id="excel-file" accept=".xlsx,.xls">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        API Endpoints
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="/api/households" class="list-group-item list-group-item-action" target="_blank">Get All Households</a>
+                            <a href="#" class="list-group-item list-group-item-action household-accounts disabled">Get Household Accounts (Select Household First)</a>
+                            <a href="#" class="list-group-item list-group-item-action account-activities disabled">Get Account Activities (Select Account First)</a>
+                            <a href="#" class="list-group-item list-group-item-action account-performance disabled">Get Account Performance (Select Account First)</a>
+                            <a href="#" class="list-group-item list-group-item-action household-report disabled">Generate Household PDF Report (Select Household First)</a>
+                            <a href="#" class="list-group-item list-group-item-action account-report disabled">Generate Account PDF Report (Select Account First)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Households
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="households-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Risk Profile</th>
+                                        <th>Segment</th>
+                                        <th>Total Assets</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" class="text-center">No data available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card d-none" id="accounts-section">
+                    <div class="card-header">
+                        Accounts for Household: <span id="selected-household">None</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="accounts-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Account Type</th>
+                                        <th>Opening Date</th>
+                                        <th>Current Balance</th>
+                                        <th>Currency</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="6" class="text-center">No accounts available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 mb-5">
+            <div class="col-12">
+                <div class="card d-none" id="account-details-section">
+                    <div class="card-header">
+                        Details for Account: <span id="selected-account">None</span>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="accountTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="activities-tab" data-bs-toggle="tab" data-bs-target="#activities" type="button" role="tab" aria-controls="activities" aria-selected="true">Activities</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="performance-tab" data-bs-toggle="tab" data-bs-target="#performance" type="button" role="tab" aria-controls="performance" aria-selected="false">Performance</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="goals-tab" data-bs-toggle="tab" data-bs-target="#goals" type="button" role="tab" aria-controls="goals" aria-selected="false">Financial Goals</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="accountTabsContent">
+                            <div class="tab-pane fade show active" id="activities" role="tabpanel" aria-labelledby="activities-tab">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover" id="activities-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="4" class="text-center">No activities available</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="performance" role="tabpanel" aria-labelledby="performance-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">Performance Metrics</div>
+                                            <div class="card-body">
+                                                <table class="table" id="metrics-table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <th>YTD Return</th>
+                                                            <td id="ytd-return">0.00%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>1-Year Return</th>
+                                                            <td id="one-yr-return">0.00%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>3-Year Return (Annualized)</th>
+                                                            <td id="three-yr-return">0.00%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>5-Year Return (Annualized)</th>
+                                                            <td id="five-yr-return">0.00%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Volatility</th>
+                                                            <td id="volatility">0.00%</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Max Drawdown</th>
+                                                            <td id="max-drawdown">0.00%</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card mb-3">
+                                            <div class="card-header">Asset Allocation</div>
+                                            <div class="card-body">
+                                                <canvas id="allocation-chart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header">Account Value Over Time</div>
+                                            <div class="card-body">
+                                                <canvas id="value-chart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="goals" role="tabpanel" aria-labelledby="goals-tab">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <div class="card">
+                                            <div class="card-header d-flex justify-content-between align-items-center">
+                                                <span>Financial Goals</span>
+                                                <div>
+                                                    <button class="btn btn-sm btn-primary" id="create-sample-goals">Create Sample Goals</button>
+                                                    <button class="btn btn-sm btn-success ms-2" id="add-new-goal">Add New Goal</button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="goals-container" class="row">
+                                                    <div class="col-12 text-center py-4">
+                                                        <p class="text-muted">No financial goals found for this account.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Global variables
+        let selectedHouseholdId = null;
+        let selectedAccountId = null;
+        let allocationChart = null;
+        let valueChart = null;
+
+        // Helper function to show status messages
+        function showStatus(message, type = 'success') {
+            const statusElement = document.getElementById('status-message');
+            statusElement.className = `alert alert-${type}`;
+            statusElement.textContent = message;
+            statusElement.classList.remove('d-none');
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                statusElement.classList.add('d-none');
+            }, 5000);
+        }
+
+        // Create sample data
+        document.getElementById('create-sample-data').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/create-sample-data', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showStatus('Sample data created successfully');
+                    loadHouseholds();
+                } else {
+                    showStatus(`Error: ${data.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'danger');
+            }
+        });
+
+        // Upload Excel file
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('excel-file');
+            if (!fileInput.files.length) {
+                showStatus('Please select a file to upload', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const response = await fetch('/api/import/excel', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    showStatus(`Excel data imported successfully. ${JSON.stringify(data.import_count)}`);
+                    loadHouseholds();
+                } else {
+                    showStatus(`Error: ${data.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'danger');
+            }
+        });
+
+        // Load households
+        async function loadHouseholds() {
+            try {
+                const response = await fetch('/api/households');
+                const households = await response.json();
+
+                const tableBody = document.querySelector('#households-table tbody');
+                if (households.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No households available</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                households.forEach(household => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${household.id}</td>
+                        <td>${household.name}</td>
+                        <td>${household.email}</td>
+                        <td>${household.phone}</td>
+                        <td>${household.risk_profile}</td>
+                        <td>${household.segment}</td>
+                        <td>$${household.total_assets ? household.total_assets.toLocaleString() : 0}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary view-accounts" data-id="${household.id}" data-name="${household.name}">
+                                View Accounts
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Add event listeners to view accounts buttons
+                document.querySelectorAll('.view-accounts').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        selectedHouseholdId = e.target.dataset.id;
+                        const householdName = e.target.dataset.name;
+                        document.getElementById('selected-household').textContent = householdName;
+                        
+                        // Update API links
+                        document.querySelector('.household-accounts').href = `/api/households/${selectedHouseholdId}/accounts`;
+                        document.querySelector('.household-accounts').classList.remove('disabled');
+                        
+                        // Update PDF report link
+                        document.querySelector('.household-report').href = `/api/reports/client/${selectedHouseholdId}`;
+                        document.querySelector('.household-report').classList.remove('disabled');
+                        
+                        loadAccounts(selectedHouseholdId);
+                    });
+                });
+            } catch (error) {
+                showStatus(`Error loading households: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load accounts for a household
+        async function loadAccounts(householdId) {
+            try {
+                const response = await fetch(`/api/households/${householdId}/accounts`);
+                const accounts = await response.json();
+
+                const tableBody = document.querySelector('#accounts-table tbody');
+                const accountsSection = document.getElementById('accounts-section');
+                accountsSection.classList.remove('d-none');
+
+                if (accounts.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No accounts available for this household</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                accounts.forEach(account => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${account.id}</td>
+                        <td>${account.account_type}</td>
+                        <td>${new Date(account.opening_date).toLocaleDateString()}</td>
+                        <td>$${account.current_balance ? account.current_balance.toLocaleString() : 0}</td>
+                        <td>${account.currency}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary view-account-details" data-id="${account.id}" data-type="${account.account_type}">
+                                View Details
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Add event listeners to view account details buttons
+                document.querySelectorAll('.view-account-details').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        selectedAccountId = e.target.dataset.id;
+                        const accountType = e.target.dataset.type;
+                        document.getElementById('selected-account').textContent = `${accountType} (ID: ${selectedAccountId})`;
+                        
+                        // Update API links
+                        document.querySelector('.account-activities').href = `/api/accounts/${selectedAccountId}/activities`;
+                        document.querySelector('.account-activities').classList.remove('disabled');
+                        document.querySelector('.account-performance').href = `/api/accounts/${selectedAccountId}/performance`;
+                        document.querySelector('.account-performance').classList.remove('disabled');
+                        
+                        // Update PDF report link
+                        document.querySelector('.account-report').href = `/api/reports/account/${selectedAccountId}`;
+                        document.querySelector('.account-report').classList.remove('disabled');
+                        
+                        loadAccountDetails(selectedAccountId);
+                    });
+                });
+            } catch (error) {
+                showStatus(`Error loading accounts: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load account details (activities and performance)
+        async function loadAccountDetails(accountId) {
+            const accountDetailsSection = document.getElementById('account-details-section');
+            accountDetailsSection.classList.remove('d-none');
+
+            // Reset tabs to activities
+            document.getElementById('activities-tab').click();
+
+            // Load activities
+            loadActivities(accountId);
+            
+            // Load performance metrics
+            loadPerformance(accountId);
+        }
+
+        // Load activities for an account
+        async function loadActivities(accountId) {
+            try {
+                const response = await fetch(`/api/accounts/${accountId}/activities`);
+                const activities = await response.json();
+
+                const tableBody = document.querySelector('#activities-table tbody');
+                if (activities.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4" class="text-center">No activities available for this account</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                activities.forEach(activity => {
+                    const row = document.createElement('tr');
+                    const amount = parseFloat(activity.amount);
+                    const formattedAmount = amount >= 0 ? 
+                        `<span class="text-success">+$${Math.abs(amount).toLocaleString()}</span>` : 
+                        `<span class="text-danger">-$${Math.abs(amount).toLocaleString()}</span>`;
+                    
+                    row.innerHTML = `
+                        <td>${new Date(activity.date).toLocaleDateString()}</td>
+                        <td>${activity.type}</td>
+                        <td>${activity.description}</td>
+                        <td>${formattedAmount}</td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                showStatus(`Error loading activities: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load performance for an account
+        async function loadPerformance(accountId) {
+            try {
+                const response = await fetch(`/api/accounts/${accountId}/performance`);
+                const performance = await response.json();
+
+                if (performance.error) {
+                    showStatus(`Error: ${performance.error}`, 'warning');
+                    return;
+                }
+
+                // Update metrics
+                document.getElementById('ytd-return').textContent = `${performance.ytd_return.toFixed(2)}%`;
+                document.getElementById('one-yr-return').textContent = `${performance.one_yr_return.toFixed(2)}%`;
+                document.getElementById('three-yr-return').textContent = `${performance.three_yr_return.toFixed(2)}%`;
+                document.getElementById('five-yr-return').textContent = `${performance.five_yr_return.toFixed(2)}%`;
+                document.getElementById('volatility').textContent = `${performance.volatility.toFixed(2)}%`;
+                document.getElementById('max-drawdown').textContent = `${performance.max_drawdown.toFixed(2)}%`;
+
+                // Update allocation chart
+                if (performance.allocation && Object.keys(performance.allocation).length > 0) {
+                    const labels = Object.keys(performance.allocation);
+                    const data = Object.values(performance.allocation);
+                    
+                    // Destroy previous chart if it exists
+                    if (allocationChart) {
+                        allocationChart.destroy();
+                    }
+
+                    const ctx = document.getElementById('allocation-chart').getContext('2d');
+                    allocationChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                data: data,
+                                backgroundColor: [
+                                    '#2A5298', '#4CAF50', '#FFC107', '#9C27B0', '#F44336', '#03A9F4', '#795548'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'right',
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Fetch performance chart data
+                try {
+                    // This would be a separate endpoint in a full implementation
+                    // Here we're mocking the data since we don't have a dedicated endpoint yet
+                    const chartResponse = await fetch(`/api/accounts/${accountId}/performance`);
+                    const chartData = await chartResponse.json();
+                    
+                    // For this demonstration, assume we would get time series data
+                    // in a real implementation, we would use the actual data returned
+                    
+                    // Create dummy time series data (for demonstration purposes)
+                    const today = new Date();
+                    const dummyData = [];
+                    let value = 100000;
+                    
+                    for (let i = 365; i >= 0; i -= 30) {
+                        const date = new Date(today);
+                        date.setDate(today.getDate() - i);
+                        value = value * (1 + (Math.random() * 0.1 - 0.03)); // random fluctuation
+                        dummyData.push({
+                            date: date.toISOString().split('T')[0],
+                            value: value
+                        });
+                    }
+                    
+                    // Sort by date
+                    dummyData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    
+                    // Create chart
+                    if (valueChart) {
+                        valueChart.destroy();
+                    }
+                    
+                    const valCtx = document.getElementById('value-chart').getContext('2d');
+                    valueChart = new Chart(valCtx, {
+                        type: 'line',
+                        data: {
+                            labels: dummyData.map(d => d.date),
+                            datasets: [{
+                                label: 'Account Value',
+                                data: dummyData.map(d => d.value),
+                                borderColor: '#2A5298',
+                                backgroundColor: 'rgba(42, 82, 152, 0.1)',
+                                tension: 0.3,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    ticks: {
+                                        callback: function(value) {
+                                            return '$' + value.toLocaleString();
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            return '$' + context.parsed.y.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    
+                } catch (error) {
+                    console.error('Error loading chart data:', error);
+                }
+                
+            } catch (error) {
+                showStatus(`Error loading performance data: ${error.message}`, 'danger');
+            }
+        }
+
+        // Load financial goals for an account
+        async function loadGoals(accountId) {
+            try {
+                const response = await fetch(`/api/accounts/${accountId}/goals`);
+                const goals = await response.json();
+                
+                const goalsContainer = document.getElementById('goals-container');
+                
+                if (goals.length === 0) {
+                    goalsContainer.innerHTML = `
+                        <div class="col-12 text-center py-4">
+                            <p class="text-muted">No financial goals found for this account.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                goalsContainer.innerHTML = '';
+                
+                // Sort goals by priority and status
+                goals.sort((a, b) => {
+                    // Completed goals at the bottom
+                    if (a.status === 'Completed' && b.status !== 'Completed') return 1;
+                    if (a.status !== 'Completed' && b.status === 'Completed') return -1;
+                    
+                    // Then sort by priority (lower number = higher priority)
+                    return a.priority - b.priority;
+                });
+                
+                // Create a goal card for each goal
+                goals.forEach(goal => {
+                    const goalCol = document.createElement('div');
+                    goalCol.className = 'col-md-6 col-lg-4';
+                    
+                    // Calculate the progress percentage
+                    const progressPct = goal.progress_percentage || 0;
+                    
+                    // Format currency with $ and commas
+                    const formatCurrency = (amount) => {
+                        return '$' + parseFloat(amount).toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                    };
+                    
+                    // Get the right category class
+                    let categoryClass = 'goal-category-General';
+                    if (goal.category) {
+                        const category = goal.category.replace(/\s+/g, '');
+                        if (category.includes('Retirement')) categoryClass = 'goal-category-Retirement';
+                        else if (category.includes('Education')) categoryClass = 'goal-category-Education';
+                        else if (category.includes('Home')) categoryClass = 'goal-category-Home';
+                        else if (category.includes('Emergency')) categoryClass = 'goal-category-Emergency';
+                        else if (category.includes('Vacation')) categoryClass = 'goal-category-Vacation';
+                        else if (category.includes('Car')) categoryClass = 'goal-category-Car';
+                    }
+                    
+                    // Get the correct status class
+                    let statusClass = 'goal-status-In-Progress';
+                    if (goal.status === 'Completed') statusClass = 'goal-status-Completed';
+                    else if (goal.status === 'Canceled') statusClass = 'goal-status-Canceled';
+                    
+                    // Format dates
+                    const formatDate = (dateString) => {
+                        if (!dateString) return 'Not set';
+                        return new Date(dateString).toLocaleDateString();
+                    };
+                    
+                    // Create the goal card
+                    goalCol.innerHTML = `
+                        <div class="goal-card" data-goal-id="${goal.id}">
+                            <div class="goal-header ${categoryClass}">
+                                <span>${goal.category || 'General'}</span>
+                                <div>
+                                    <span class="goal-priority goal-priority-${goal.priority || 1}">${goal.priority || 1}</span>
+                                    <span class="goal-status ${statusClass}">${goal.status}</span>
+                                </div>
+                            </div>
+                            <div class="goal-body">
+                                <h3 class="goal-title">${goal.name}</h3>
+                                <p class="goal-description">${goal.description || ''}</p>
+                                
+                                <div class="goal-info">
+                                    <div>
+                                        <div class="goal-amount">${formatCurrency(goal.current_amount)} / ${formatCurrency(goal.target_amount)}</div>
+                                        <div class="goal-date">Target: ${formatDate(goal.target_date)}</div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="goal-percentage">${progressPct.toFixed(1)}%</div>
+                                        <div class="goal-days">${goal.days_remaining ? goal.days_remaining + ' days left' : 'No deadline'}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="goal-progress-container">
+                                    <div class="goal-progress-bar" style="width: 0%; background-color: ${goal.status === 'Completed' ? '#2ECC71' : '#3498DB'}"></div>
+                                </div>
+                                
+                                <div class="goal-actions">
+                                    <button class="btn btn-sm btn-outline-primary view-goal-history" data-goal-id="${goal.id}">
+                                        History
+                                    </button>
+                                    <button class="btn btn-sm btn-success add-progress" data-goal-id="${goal.id}" ${goal.status === 'Completed' ? 'disabled' : ''}>
+                                        Add Progress
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    goalsContainer.appendChild(goalCol);
+                });
+                
+                // Animate progress bars after a short delay
+                setTimeout(() => {
+                    document.querySelectorAll('.goal-progress-bar').forEach(bar => {
+                        const card = bar.closest('.goal-card');
+                        const goalId = card.dataset.goalId;
+                        const goal = goals.find(g => g.id.toString() === goalId);
+                        
+                        if (goal) {
+                            bar.style.width = `${goal.progress_percentage || 0}%`;
+                        }
+                    });
+                }, 300);
+                
+                // Add event listeners for the goal buttons
+                document.querySelectorAll('.view-goal-history').forEach(button => {
+                    button.addEventListener('click', async (e) => {
+                        const goalId = e.target.dataset.goalId;
+                        await loadGoalDetails(goalId);
+                        
+                        // Show the modal
+                        const historyModal = new bootstrap.Modal(document.getElementById('goalHistoryModal'));
+                        historyModal.show();
+                    });
+                });
+                
+                document.querySelectorAll('.add-progress').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const goalId = e.target.dataset.goalId;
+                        document.getElementById('progress-goal-id').value = goalId;
+                        
+                        // Show the modal
+                        const progressModal = new bootstrap.Modal(document.getElementById('addProgressModal'));
+                        progressModal.show();
+                    });
+                });
+                
+            } catch (error) {
+                showStatus(`Error loading goals: ${error.message}`, 'danger');
+            }
+        }
+        
+        // Load goal details and history
+        async function loadGoalDetails(goalId) {
+            try {
+                const response = await fetch(`/api/goals/${goalId}`);
+                const goal = await response.json();
+                
+                // Update the modal title and content
+                document.getElementById('goalHistoryTitle').textContent = goal.name;
+                
+                // Format currency
+                const formatCurrency = (amount) => {
+                    return '$' + parseFloat(amount).toLocaleString(undefined, {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                };
+                
+                // Set the current progress
+                document.getElementById('goalHistoryProgress').innerHTML = `
+                    <p><strong>Current Progress:</strong> ${formatCurrency(goal.current_amount)} / ${formatCurrency(goal.target_amount)} (${goal.progress_percentage.toFixed(1)}%)</p>
+                `;
+                
+                // Display the goal update history
+                const historyContainer = document.getElementById('goalUpdateHistory');
+                
+                if (!goal.progress_updates || goal.progress_updates.length === 0) {
+                    historyContainer.innerHTML = '<p class="text-muted">No progress updates found.</p>';
+                    return;
+                }
+                
+                // Sort updates by date, newest first
+                goal.progress_updates.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                historyContainer.innerHTML = '';
+                goal.progress_updates.forEach(update => {
+                    const updateItem = document.createElement('div');
+                    updateItem.className = 'progress-update-item';
+                    
+                    updateItem.innerHTML = `
+                        <div class="d-flex justify-content-between">
+                            <span class="progress-update-amount">${formatCurrency(update.amount)}</span>
+                            <span class="progress-update-date">${new Date(update.date).toLocaleDateString()}</span>
+                        </div>
+                        ${update.note ? `<div class="progress-update-note">${update.note}</div>` : ''}
+                    `;
+                    
+                    historyContainer.appendChild(updateItem);
+                });
+                
+            } catch (error) {
+                showStatus(`Error loading goal details: ${error.message}`, 'danger');
+            }
+        }
+        
+        // Add progress to a goal
+        async function addGoalProgress(goalId, amount, note) {
+            try {
+                const response = await fetch(`/api/goals/${goalId}/progress`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        note: note
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Progress added successfully!');
+                    
+                    // Reload the goals to reflect the changes
+                    if (selectedAccountId) {
+                        loadGoals(selectedAccountId);
+                    }
+                    
+                    return true;
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                    return false;
+                }
+            } catch (error) {
+                showStatus(`Error adding progress: ${error.message}`, 'danger');
+                return false;
+            }
+        }
+        
+        // Create sample goals
+        async function createSampleGoals() {
+            try {
+                const response = await fetch('/api/create-sample-goals', {
+                    method: 'POST'
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus(`Sample goals created: ${result.created_goals}`);
+                    
+                    // Reload the goals if we have a selected account
+                    if (selectedAccountId) {
+                        loadGoals(selectedAccountId);
+                    }
+                    
+                    return true;
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                    return false;
+                }
+            } catch (error) {
+                showStatus(`Error creating sample goals: ${error.message}`, 'danger');
+                return false;
+            }
+        }
+        
+        // Add event listener for the create sample goals button
+        document.getElementById('create-sample-goals').addEventListener('click', createSampleGoals);
+        
+        // Add event listener to load goals when viewing account details
+        document.getElementById('goals-tab').addEventListener('click', () => {
+            if (selectedAccountId) {
+                loadGoals(selectedAccountId);
+            }
+        });
+        
+        // Modify the account details event listener to also load goals
+        // Find the original event listener first
+        const originalAccountDetailsButtons = document.querySelectorAll('.view-account-details');
+        if (originalAccountDetailsButtons.length) {
+            originalAccountDetailsButtons.forEach(button => {
+                // Remove the original event listener if possible
+                button.replaceWith(button.cloneNode(true));
+            });
+            
+            // Add our new event listener that also loads goals
+            document.querySelectorAll('.view-account-details').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    selectedAccountId = e.target.dataset.id;
+                    const accountType = e.target.dataset.type;
+                    document.getElementById('selected-account').textContent = `${accountType} (ID: ${selectedAccountId})`;
+                    
+                    // Update API links
+                    document.querySelector('.account-activities').href = `/api/accounts/${selectedAccountId}/activities`;
+                    document.querySelector('.account-activities').classList.remove('disabled');
+                    document.querySelector('.account-performance').href = `/api/accounts/${selectedAccountId}/performance`;
+                    document.querySelector('.account-performance').classList.remove('disabled');
+                    document.querySelector('.account-report').href = `/api/reports/account/${selectedAccountId}`;
+                    document.querySelector('.account-report').classList.remove('disabled');
+                    
+                    // Show the account details section
+                    document.getElementById('account-details-section').classList.remove('d-none');
+                    
+                    // Load account activities and performance
+                    loadActivities(selectedAccountId);
+                    loadPerformance(selectedAccountId);
+                    
+                    // Also load goals for this account
+                    loadGoals(selectedAccountId);
+                });
+            });
+        }
+        
+        // Add modal HTML for goal history and adding progress
+        const modalsContainer = document.createElement('div');
+        modalsContainer.innerHTML = `
+            <!-- Goal History Modal -->
+            <div class="modal fade" id="goalHistoryModal" tabindex="-1" aria-labelledby="goalHistoryModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="goalHistoryModalLabel">Goal History: <span id="goalHistoryTitle"></span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="goalHistoryProgress"></div>
+                            <h6 class="mt-4">Progress Updates</h6>
+                            <div id="goalUpdateHistory" class="progress-update-history">
+                                <p class="text-muted">No progress updates found.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Progress Modal -->
+            <div class="modal fade" id="addProgressModal" tabindex="-1" aria-labelledby="addProgressModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addProgressModalLabel">Add Progress Update</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="progressForm" class="progress-update-form">
+                                <input type="hidden" id="progress-goal-id">
+                                <div class="mb-3">
+                                    <label for="progress-amount" class="form-label">Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="progress-amount" required step="0.01" min="0.01">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="progress-note" class="form-label">Note (optional)</label>
+                                    <textarea class="form-control" id="progress-note" rows="3"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="submit-progress">Save Progress</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add New Goal Modal -->
+            <div class="modal fade" id="addGoalModal" tabindex="-1" aria-labelledby="addGoalModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addGoalModalLabel">Add New Financial Goal</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="goalForm">
+                                <input type="hidden" id="goal-household-id">
+                                <input type="hidden" id="goal-account-id">
+                                
+                                <div class="mb-3">
+                                    <label for="goal-name" class="form-label">Goal Name</label>
+                                    <input type="text" class="form-control" id="goal-name" required>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-category" class="form-label">Category</label>
+                                    <select class="form-select" id="goal-category">
+                                        <option value="Retirement">Retirement</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Home Purchase">Home Purchase</option>
+                                        <option value="Emergency Fund">Emergency Fund</option>
+                                        <option value="Vacation">Vacation</option>
+                                        <option value="New Car">New Car</option>
+                                        <option value="General">General</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-description" class="form-label">Description (optional)</label>
+                                    <textarea class="form-control" id="goal-description" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-target-amount" class="form-label">Target Amount</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="goal-target-amount" required step="0.01" min="0.01">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-current-amount" class="form-label">Current Amount (optional)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="goal-current-amount" step="0.01" min="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-target-date" class="form-label">Target Date (optional)</label>
+                                    <input type="date" class="form-control" id="goal-target-date">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="goal-priority" class="form-label">Priority</label>
+                                    <select class="form-select" id="goal-priority">
+                                        <option value="1">High (1)</option>
+                                        <option value="2">Medium (2)</option>
+                                        <option value="3">Low (3)</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="submit-goal">Create Goal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Add the modals to the document
+        document.body.appendChild(modalsContainer);
+        
+        // Add event listener for the add new goal button
+        document.getElementById('add-new-goal').addEventListener('click', () => {
+            if (selectedAccountId && selectedHouseholdId) {
+                document.getElementById('goal-household-id').value = selectedHouseholdId;
+                document.getElementById('goal-account-id').value = selectedAccountId;
+                
+                const addGoalModal = new bootstrap.Modal(document.getElementById('addGoalModal'));
+                addGoalModal.show();
+            } else {
+                showStatus('Please select an account first.', 'warning');
+            }
+        });
+        
+        // Add event listener for the submit progress button
+        document.getElementById('submit-progress').addEventListener('click', async () => {
+            const goalId = document.getElementById('progress-goal-id').value;
+            const amount = parseFloat(document.getElementById('progress-amount').value);
+            const note = document.getElementById('progress-note').value;
+            
+            if (!goalId || isNaN(amount) || amount <= 0) {
+                showStatus('Please enter a valid amount.', 'warning');
+                return;
+            }
+            
+            const success = await addGoalProgress(goalId, amount, note);
+            
+            if (success) {
+                // Close the modal
+                bootstrap.Modal.getInstance(document.getElementById('addProgressModal')).hide();
+                
+                // Reset the form
+                document.getElementById('progress-amount').value = '';
+                document.getElementById('progress-note').value = '';
+            }
+        });
+        
+        // Add event listener for the submit goal button
+        document.getElementById('submit-goal').addEventListener('click', async () => {
+            const form = document.getElementById('goalForm');
+            const householdId = document.getElementById('goal-household-id').value;
+            const accountId = document.getElementById('goal-account-id').value;
+            const name = document.getElementById('goal-name').value;
+            const category = document.getElementById('goal-category').value;
+            const description = document.getElementById('goal-description').value;
+            const targetAmount = parseFloat(document.getElementById('goal-target-amount').value);
+            const currentAmount = parseFloat(document.getElementById('goal-current-amount').value || 0);
+            const targetDate = document.getElementById('goal-target-date').value;
+            const priority = document.getElementById('goal-priority').value;
+            
+            if (!name || isNaN(targetAmount) || targetAmount <= 0) {
+                showStatus('Please fill in all required fields.', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/goals', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        household_id: householdId,
+                        account_id: accountId,
+                        name: name,
+                        category: category,
+                        description: description,
+                        target_amount: targetAmount,
+                        current_amount: currentAmount,
+                        target_date: targetDate,
+                        priority: priority
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    showStatus('Goal created successfully!');
+                    
+                    // Close the modal
+                    bootstrap.Modal.getInstance(document.getElementById('addGoalModal')).hide();
+                    
+                    // Reset the form
+                    form.reset();
+                    
+                    // Reload the goals
+                    if (selectedAccountId) {
+                        loadGoals(selectedAccountId);
+                    }
+                } else {
+                    showStatus(`Error: ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showStatus(`Error creating goal: ${error.message}`, 'danger');
+            }
+        });
+
+        // Initial load of data
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHouseholds();
+        });
+    </script>
+</body>
+</html>

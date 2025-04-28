@@ -1,17 +1,23 @@
 from flask import Flask, request, jsonify, send_file, render_template, send_from_directory
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
 import os
 import pandas as pd
 from datetime import datetime
 import dateutil.parser
+
+# Initialize Flask app
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///financial_advisor.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
 
 from excel_handler import read_excel_file, write_excel_file
 from data_processor import process_client_data, process_account_performance
 from main import app, db
 from models import Household, Account, Activity, Performance, FinancialGoal, GoalProgressUpdate
 
-# Initialize app
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 # Define upload folder for Excel files
 UPLOAD_FOLDER = 'uploads'
@@ -243,7 +249,15 @@ def import_excel():
 def create_sample_data():
     """Create sample data in the database"""
     try:
-        from excel_handler import create_sample_excel
+        # Ensure tables are created
+        with app.app_context():
+            db.create_all()
+        
+            db.session.commit()
+
+        db.session.begin()
+        with db.session.no_autoflush:
+            from excel_handler import create_sample_excel
         
         # Create sample Excel file
         sample_file = create_sample_excel()
@@ -356,8 +370,12 @@ def create_sample_data():
                         import_count['performance'] += 1
             
             # Commit all changes to database
-            db.session.commit()
-            
+            try:
+                db.session.commit()
+            except Exception as commit_error:
+                db.session.rollback()
+                raise Exception(f"Database commit error: {str(commit_error)}")
+
             # Clean up the file
             os.remove(sample_file)
             

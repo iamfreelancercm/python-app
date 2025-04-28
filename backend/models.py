@@ -1,5 +1,6 @@
 from datetime import datetime
-from backend.main import db
+#from backend.main import db
+from app import db
 
 # Define database models
 

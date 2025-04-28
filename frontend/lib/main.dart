@@ -14,7 +14,7 @@ void main() {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  
+
   runApp(FinancialAdvisorApp());
 }
 
@@ -24,14 +24,15 @@ class FinancialAdvisorApp extends StatelessWidget {
     return MaterialApp(
       title: 'Financial Advisor Platform',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Color(0xFF2A5298),
-        accentColor: Color(0xFF4CAF50),
+        colorScheme: ColorScheme.light(
+          primary: Color(0xFF2A5298),
+          secondary: Color(0xFF4CAF50),
+        ),
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: AppBarTheme(
-          color: Color(0xFF2A5298),
+          backgroundColor: Color(0xFF2A5298),
           elevation: 2,
-          brightness: Brightness.dark,
+          brightness: Brightness.light, //Corrected Brightness for light theme
         ),
         cardTheme: CardTheme(
           elevation: 2,
@@ -40,47 +41,48 @@ class FinancialAdvisorApp extends StatelessWidget {
           ),
         ),
         buttonTheme: ButtonThemeData(
-          buttonColor: Color(0xFF2A5298),
+          backgroundColor: Color(0xFF2A5298),
           textTheme: ButtonTextTheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
         ),
         textTheme: TextTheme(
-          headline4: TextStyle(
+          headlineMedium: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Color(0xFF2A5298),
           ),
-          headline5: TextStyle(
+          headlineSmall: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Color(0xFF2A5298),
           ),
-          headline6: TextStyle(
+          titleMedium: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Color(0xFF2A5298),
           ),
-          subtitle1: TextStyle(
+          bodyMedium: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: Colors.black87,
           ),
-          bodyText1: TextStyle(
+          bodySmall: TextStyle(
             fontSize: 14,
             color: Colors.black87,
           ),
-          bodyText2: TextStyle(
+          bodyLarge: TextStyle(
             fontSize: 14,
             color: Colors.black54,
           ),
         ),
       ),
       darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Color(0xFF1E3C72),
-        accentColor: Color(0xFF4CAF50),
+        colorScheme: ColorScheme.dark(
+          primary: Color(0xFF1E3C72),
+          secondary: Color(0xFF4CAF50),
+        ),
         scaffoldBackgroundColor: Color(0xFF121212),
         cardTheme: CardTheme(
           color: Color(0xFF242424),
@@ -90,31 +92,31 @@ class FinancialAdvisorApp extends StatelessWidget {
           ),
         ),
         textTheme: TextTheme(
-          headline4: TextStyle(
+          headlineMedium: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
-          headline5: TextStyle(
+          headlineSmall: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
-          headline6: TextStyle(
+          titleMedium: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w500,
             color: Colors.white,
           ),
-          subtitle1: TextStyle(
+          bodyMedium: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: Colors.white70,
           ),
-          bodyText1: TextStyle(
+          bodySmall: TextStyle(
             fontSize: 14,
             color: Colors.white70,
           ),
-          bodyText2: TextStyle(
+          bodyLarge: TextStyle(
             fontSize: 14,
             color: Colors.white54,
           ),

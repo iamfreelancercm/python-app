@@ -36,7 +36,7 @@ dependencies:
   http: ^0.13.5
   
   # Charts and visualization
-  fl_chart: ^0.55.0
+  fl_chart: ^0.65.0
   
   # File operations
   file_picker: ^5.2.0
@@ -100,3 +100,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

@@ -30,9 +30,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _isLoading = true;
         _isError = false;
       });
-      
+
       final clients = await _apiService.getClients();
-      
+
       setState(() {
         _clients = clients;
         _isLoading = false;
@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     // Determine if we're on a tablet based on the screen width
     final bool isTablet = MediaQuery.of(context).size.width > 600;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Financial Advisor Dashboard'),
@@ -164,7 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           SizedBox(height: 16),
           Text(
             'Error Loading Data',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
           SizedBox(height: 8),
           Padding(
@@ -172,7 +172,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Text(
               _errorMessage,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
           SizedBox(height: 24),
@@ -200,12 +200,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(height: 16),
             Text(
               'No Clients Found',
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 8),
             Text(
               'Import client data to get started',
-              style: Theme.of(context).textTheme.bodyText2,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: 24),
             ElevatedButton(
@@ -223,7 +223,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final totalClients = _clients.length;
     final totalAUM = _clients.fold(
         0.0, (sum, client) => sum + (client.totalAssets ?? 0.0));
-    
+
     if (isTablet) {
       // Tablet layout - use a more complex grid
       return Column(
@@ -377,12 +377,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Text(
                       'Total Clients',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     SizedBox(height: 8),
                     Text(
                       '$totalClients',
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ],
                 ),
@@ -398,12 +398,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     Text(
                       'Assets Under Management',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     SizedBox(height: 8),
                     Text(
                       '\$${totalAUM.toStringAsFixed(0)}',
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                   ],
                 ),

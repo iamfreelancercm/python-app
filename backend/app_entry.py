@@ -1,17 +1,23 @@
-try:
-    # Try relative import path for Azure 
-    from backend.main import app, db
-    import backend.models as models  # This will register the models with the app
-    from backend.app import *  # This imports all the routes
-except ImportError as e:
-    try:
-        # Fallback to direct import for local development
-        from main import app, db
-        import models  # This will register the models with the app
-        from app import *  # This imports all the routes
-    except ImportError:
-        print(f"Failed to import required modules: {str(e)}")
-        raise
+
+#try:
+#    from backend.main import app, db
+#    from backend.models import *  # This will register the models with the app
+#except ImportError as e:
+#    try:
+#        from main import app, db
+#        from models import *  # This will register the models with the app
+#    except ImportError:
+#        print(f"Failed to import required modules: {str(e)}")
+#        raise
+
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+# Import the app and routes
+#from app import app
+# Import the app and db from app.py
+from app import app, db
 
 # Initialize the database if running directly
 if __name__ == "__main__":
@@ -19,4 +25,5 @@ if __name__ == "__main__":
         db.create_all()
     
     # Run the app
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=True)
+

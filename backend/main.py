@@ -1,7 +1,6 @@
-import os
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 # create the app
 app = Flask(__name__)
@@ -17,8 +16,3 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Initialize database
 db = SQLAlchemy(app)
-
-if __name__ == "__main__":
-    with app.app_context():
-        # This will create tables if they don't exist
-        db.create_all()
